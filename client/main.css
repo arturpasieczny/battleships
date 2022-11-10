@@ -1,0 +1,43 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: sans-serif;
+}
+
+.board {
+  /*background-color: black;*/
+}
+.water {
+  background-color: cornflowerblue;
+  width: 45px;
+  height: 45px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  border: 1px solid #000;
+  font-size: 30px;
+  line-height: 45px;
+  font-weight: bold;
+  text-align: center;;
+  color: red;
+}
+
+button:focus {
+  outline: none;
+}
+
+
+.ship {
+  background-color: black;
+  width: 45px;
+  height: 45px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  border: 1px solid #000;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 45px;
+  text-align: center;;
+  color: red;
+}
