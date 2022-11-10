@@ -7,6 +7,11 @@ body {
 .board {
   /*background-color: black;*/
 }
+
+.board-hdr {
+  text-align: center;
+}
+
 .water {
   background-color: cornflowerblue;
   width: 45px;

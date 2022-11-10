@@ -17,7 +17,12 @@ export const Board = ({ owned, tiles, handleClick }) => {
         {[...Array(10)].map((x, i) => (
         <div className="board-row">
             {[...Array(10)].map((y, j) => (
-              <Tile key={i*10+j} id={i*10+j} tile={tiles[i*10+j]} handleClick={handleClick}/>
+              <Tile
+                  key={i*10+j}
+                  id={i*10+j}
+                  tile={tiles[i*10+j]}
+                  handleClick={handleClick}
+              />
             ))}
         </div>
         ))}
