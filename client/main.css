@@ -1,27 +1,49 @@
+
 body {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 .board {
-  /*background-color: black;*/
+  background-color: black;
+  padding: 15px;
+}
+
+.board-area-active {
+  display: flex;
+  flex-direction: column;
+  background-color: khaki;
+  padding: 30px;
+}
+
+.board-area-inactive {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
 }
 
 .board-hdr {
   text-align: center;
+}
+.board-row {
+  /*margin: 0px*/
 }
 
 .water {
   background-color: cornflowerblue;
   width: 45px;
   height: 45px;
-  margin-right: -1px;
-  margin-top: -1px;
+  /*margin-right: 0px;*/
+  /*margin-top: 0px;*/
+  /*margin-bottom: 0px;*/
+  margin: 0;
   padding: 0;
   border: 1px solid #000;
   font-size: 30px;
-  line-height: 45px;
+  /*line-height: 45px;*/
   font-weight: bold;
   text-align: center;;
   color: red;
@@ -45,4 +67,52 @@ button:focus {
   line-height: 45px;
   text-align: center;;
   color: red;
+}
+
+.game-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.game-form > div {
+  margin: 8px;
+}
+
+.game-form > div > label {
+  font-weight: bold;
+}
+
+.game-form > div  > input {
+  flex-grow: 1;
+  box-sizing: border-box;
+  padding: 10px 6px;
+  background: transparent;
+  border: 1px solid #aaa;
+  width: 100%;
+  font-size: 1em;
+  margin-right: 16px;
+  margin-top: 4px;
+}
+
+.game-form > div > input:focus {
+  outline: 0;
+}
+
+.game-form > div > button {
+  background-color: #b0d9d6;
+}
+
+.game-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }

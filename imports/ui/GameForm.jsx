@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import { Random } from 'meteor/random';
-import { Session } from "meteor/session";
 import {GamesCollection} from "../db/GamesCollection";
 
-export const GameForm = () => {
-    const [gameId, setGameId] = useState('');
+export const GameForm = ({setGameId} ) => {
     const [player1Name, setPlayer1Name] = useState('');
+    const [gameSecret, setGameSecret] = useState('');
+    const [linkError, setLinkError]  = useState('');
 
-    const handleSubmit = e =>{
+    const handleNewGame = e =>{
         e.preventDefault();
 
         if (!player1Name) return;
@@ -16,37 +16,72 @@ export const GameForm = () => {
             isBombed: false,
         })
 
-        setGameId(Random.id());
-        Session.set("gameID", gameId);
+        // var gameId = (Random.id());
+        // setGameId(gameId);
+        var player1GameId = Random.id();
+        var player2GameId = Random.id();
+        setGameId(player1GameId);
+
         const isPlayer1Next = Math.random() < 0.5;
 
         GamesCollection.insert({
-            player1Tiles: emptyBoard,
-            player2Tiles: emptyBoard,
-            player1Name: player1Name.trim(),
-            player2Name: '',
+            tiles: [emptyBoard, emptyBoard],
+            playerName: [player1Name.trim(), ''],
+            gameId: [player1GameId, player2GameId],
             isPlayer1Next,
-            gameId
+            createdAt: new Date(),
         });
     };
 
+    const handleJoinGame = e => {
+        e.preventDefault();
+
+        var game = GamesCollection.findOne({gameId: gameSecret});
+        if (!game){
+            setLinkError('Invalid id, check with invitor');
+            return;
+        }
+        setGameId(gameSecret);
+    };
+
     return (
-        <form onSubmit={handleSubmit} className="game-form">
-            <div>
-                <label htmlFor="player1Name">Player name</label>
+        <div>
+            <form onSubmit={handleNewGame} className="game-form">
+                <h2>Create new game</h2>
+                <div>
+                    <label htmlFor="player1Name">Player name</label>
 
-                <input
-                    type="text"
-                    placeholder="your name"
-                    name="player1Name"
-                    required
-                    onChange={e => setPlayer1Name(e.target.value)}
-                />
-            </div>
+                    <input
+                        type="text"
+                        placeholder="your name"
+                        name="player1Name"
+                        required
+                        onChange={e => setPlayer1Name(e.target.value)}
+                    />
+                </div>
 
-            <div>
-                <button type="submit">Create game</button>
-            </div>
-        </form>
+                <div>
+                    <button type="submit">Create game</button>
+                </div>
+            </form>
+
+            <form onSubmit={handleJoinGame} className="game-form">
+                <h2>or join existing one</h2>
+                <div>
+                    <label htmlFor="gameSecret">Game identifier</label>
+                    <input
+                        type="text"
+                        placeholder="id received in invitation"
+                        name="gameSecret"
+                        required
+                        onChange={e => setGameSecret(e.target.value)}
+                    />
+                </div>
+                { linkError && <span className="error"> {linkError} </span> }
+                <div>
+                    <button type="submit">Join game</button>
+                </div>
+            </form>
+        </div>
     );
 };
