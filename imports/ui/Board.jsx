@@ -15,7 +15,7 @@ export const Board = ({ nextMove, tiles, handleClick, playerName, boardTitle }) 
     return (
         <div className= {nextMove ? "board-area-active" : "board-area-inactive"}>
             <div className="board-hdr">
-                <h3>{ playerName }</h3>
+                <h3>{ playerName !== '' ? playerName : '\u00A0' }</h3>
                 <p>{ boardTitle }</p>
             </div>
             <div className="board">

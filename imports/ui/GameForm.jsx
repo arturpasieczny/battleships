@@ -27,6 +27,7 @@ export const GameForm = ({setGameId} ) => {
         GamesCollection.insert({
             tiles: [emptyBoard, emptyBoard],
             playerName: [player1Name.trim(), ''],
+            playerStatus: ['name', 'notPresent'],
             gameId: [player1GameId, player2GameId],
             isPlayer1Next,
             createdAt: new Date(),
@@ -36,12 +37,23 @@ export const GameForm = ({setGameId} ) => {
     const handleJoinGame = e => {
         e.preventDefault();
 
-        var game = GamesCollection.findOne({gameId: gameSecret});
+        const game = GamesCollection.findOne({gameId: gameSecret});
         if (!game){
             setLinkError('Invalid id, check with invitor');
             return;
         }
-        setGameId(gameSecret);
+        const player = game.gameId[0] !== gameSecret;
+        // re-generate player's ID to prevent cheating
+        const newGameSecret = Random.id();
+        const newGameId = game.gameId.slice();
+        newGameId[+player] = newGameSecret;
+
+        const  newPlayerStatus = game.playerStatus.slice();
+        if (newPlayerStatus[+player] === 'notPresent')
+            newPlayerStatus[+player] = 'joined';
+
+        GamesCollection.update({_id: game._id}, {$set: {gameId: newGameId, playerStatus: newPlayerStatus}});
+        setGameId(newGameSecret);
     };
 
     return (
