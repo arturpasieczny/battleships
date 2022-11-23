@@ -5,6 +5,7 @@ import {PlayerNameForm} from "./PlayerNameForm";
 import {BattlePositionForm} from "./BattlePositionForm";
 import { GamesCollection } from "../db/GamesCollection";
 import { useTracker } from 'meteor/react-meteor-data';
+import {Meteor} from "meteor/meteor";
 
 
 export const App = () => {
@@ -22,30 +23,16 @@ export const App = () => {
             return;
         if (game.playerStatus.includes('win'))
             return;
-        var changedTiles = game.tiles.slice();
-        changedTiles[+!player][i].isBombed = true;
-        GamesCollection.update({_id: game._id}, {$set:{isPlayer1Next: !game.isPlayer1Next}});
-        GamesCollection.update({_id: game._id}, {$set:{tiles: changedTiles}})
 
+        Meteor.call('game.shoot', game._id, player, i);
     };
 
     const saveBattlePosition = (ships) => {
-        var changedTiles = game.tiles.slice();
-        changedTiles[+player] = ships.map(ship => ({
-            isBombed: false,
-            isShip: ship,
-        }));
-        GamesCollection.update({_id: game._id}, {$set:{tiles: changedTiles}});
-
-        var changedPlayerStatus = game.playerStatus.slice();
-        changedPlayerStatus[+player] = 'position';
-        GamesCollection.update({_id: game._id}, {$set:{playerStatus: changedPlayerStatus}});
+        Meteor.call('game.saveBattlePosition', game._id, player, ships);
     };
 
     const startGame = () => {
-        var changedPlayerStatus = game.playerStatus.slice();
-        changedPlayerStatus[+player] = 'ready';
-        GamesCollection.update({_id: game._id}, {$set:{playerStatus: changedPlayerStatus}});
+        Meteor.call('game.start', game._id, player);
     }
 
     const shipsLeft = [
@@ -53,16 +40,6 @@ export const App = () => {
         game ? game.tiles[1].filter(tile => tile.isShip && !tile.isBombed).length : '',
     ] ;
 
-    //handle end of game
-    if (game && game.playerStatus[0] === 'ready' && game.playerStatus[1] === 'ready') {
-        let newStatus = [];
-        if(!shipsLeft[0])
-            newStatus = ['lost', 'win'];
-        if(!shipsLeft[1])
-            newStatus = ['win', 'lost'];
-        if (newStatus.includes('win'))
-            GamesCollection.update({_id: game._id}, {$set:{playerStatus: newStatus}});
-    }
 
 
     return (

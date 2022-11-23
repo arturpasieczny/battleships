@@ -1,20 +1,11 @@
 import React, {useState} from "react";
-import {GamesCollection} from "../db/GamesCollection";
 
 export const PlayerNameForm = ({gameId, player}) => {
     const [playerName, setPlayerName] = useState('');
 
     const onSubmit = e => {
         e.preventDefault();
-        const game = GamesCollection.findOne({_id: gameId});
-
-        var newPlayerName = game.playerName.slice();
-        newPlayerName[+player] = playerName;
-
-        var newPlayerStatus = game.playerStatus.slice();
-        newPlayerStatus[+player] = 'name';
-
-        GamesCollection.update({_id: gameId}, {$set:{playerName: newPlayerName, playerStatus: newPlayerStatus}});
+        Meteor.call('game.setPlayerName', gameId, player, playerName)
     };
 
     return(

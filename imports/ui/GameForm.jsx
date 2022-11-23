@@ -1,6 +1,7 @@
+import { Meteor } from "meteor/meteor";
 import React, {useState} from "react";
 import { Random } from 'meteor/random';
-import {GamesCollection} from "../db/GamesCollection";
+import { GamesCollection } from "../db/GamesCollection";
 
 export const GameForm = ({setGameId} ) => {
     const [player1Name, setPlayer1Name] = useState('');
@@ -11,27 +12,11 @@ export const GameForm = ({setGameId} ) => {
         e.preventDefault();
 
         if (!player1Name) return;
-        const emptyBoard = Array(100).fill({
-            isShip: false,
-            isBombed: false,
-        })
 
-        // var gameId = (Random.id());
-        // setGameId(gameId);
         var player1GameId = Random.id();
-        var player2GameId = Random.id();
         setGameId(player1GameId);
 
-        const isPlayer1Next = Math.random() < 0.5;
-
-        GamesCollection.insert({
-            tiles: [emptyBoard, emptyBoard],
-            playerName: [player1Name.trim(), ''],
-            playerStatus: ['name', 'notPresent'],
-            gameId: [player1GameId, player2GameId],
-            isPlayer1Next,
-            createdAt: new Date(),
-        });
+        Meteor.call('game.create', player1Name, player1GameId);
     };
 
     const handleJoinGame = e => {
@@ -43,16 +28,9 @@ export const GameForm = ({setGameId} ) => {
             return;
         }
         const player = game.gameId[0] !== gameSecret;
-        // re-generate player's ID to prevent cheating
         const newGameSecret = Random.id();
-        const newGameId = game.gameId.slice();
-        newGameId[+player] = newGameSecret;
 
-        const  newPlayerStatus = game.playerStatus.slice();
-        if (newPlayerStatus[+player] === 'notPresent')
-            newPlayerStatus[+player] = 'joined';
-
-        GamesCollection.update({_id: game._id}, {$set: {gameId: newGameId, playerStatus: newPlayerStatus}});
+        Meteor.call('game.join', gameSecret, player, newGameSecret);
         setGameId(newGameSecret);
     };
 
