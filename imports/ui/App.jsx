@@ -12,10 +12,20 @@ export const App = () => {
 
     const [gameId, setGameId] = useState('');
 
-    const game = useTracker (() => {
-         let game = gameId ? GamesCollection.findOne({gameId: gameId}) : '';
-         return game ? game : '';
-     });
+    // const game = useTracker (() => {
+    //      let game = gameId ? GamesCollection.findOne({gameId: gameId}) : '';
+    //      return game ? game : '';
+    //  });
+
+
+    const { game, isLoading } = useTracker (() =>{
+       const handler = Meteor.subscribe('games');
+       if (!handler.ready()) {
+           return { game: '', isLoading: true };
+       }
+       const game = gameId ? GamesCollection.findOne({gameId: gameId}) : '';
+       return game ? { game } : { game: '' };
+    });
     const player = game ? game.gameId[0] !== gameId : '';
 
     const handleClick = (i) => {
@@ -123,6 +133,13 @@ export const App = () => {
                             <h1>You {game.playerStatus[+player]} !!!</h1>
                         </div>
                     </div>
+                    )}
+                    { isLoading && (
+                        <div className="game-results-outer">
+                            <div className="game-results-inner">
+                                <h1>Loading data</h1>
+                            </div>
+                        </div>
                     )}
                 </>
                 ) : (

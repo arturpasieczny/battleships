@@ -17,6 +17,7 @@ export const GameForm = ({setGameId} ) => {
         setGameId(player1GameId);
 
         Meteor.call('game.create', player1Name, player1GameId);
+
     };
 
     const handleJoinGame = e => {

@@ -7,6 +7,7 @@ Meteor.methods({
     'game.create' (player1Name, player1GameId) {
         check(player1Name, String);
         check(player1GameId, String);
+        console.log('player1Name', player1Name, 'player1GameId', player1GameId)
 
         const player2GameId = Random.id();
         const isPlayer1Next = Math.random() < 0.5;
@@ -113,7 +114,7 @@ Meteor.methods({
 
         const shipsLeft = [
             game.tiles[0].filter(tile => tile.isShip && !tile.isBombed).length,
-            game.tiles[1].filter(tile => tile.isShip && !tile.isBombed).length,
+            game.tiles[1].filter(tile => tile.isShip && !tile.isBombed).length  ,
         ];
 
         //handle end of game
