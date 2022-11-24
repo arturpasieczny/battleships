@@ -1,8 +1,8 @@
 # Tech stack
-![javasscript](./docs/javascript.svg)
-![meteor](./docs/meteor.svg)
-![react](./docs/react.svg)
-![mongodb](./docs/mongodb.svg)
+![javasscript](./docs/javascript.svg =250x)
+![meteor](./docs/meteor.svg =250x)
+![react](./docs/react.svg =250x)
+![mongodb](./docs/mongodb.svg =250x)
 # Battleships
 Classic battleships game, 2 players.
 
