@@ -19,7 +19,7 @@ export const App = () => {
 
 
     const { game, isLoading } = useTracker (() =>{
-       const handler = Meteor.subscribe('games');
+       const handler = Meteor.subscribe('games', gameId);
        if (!handler.ready()) {
            return { game: '', isLoading: true };
        }

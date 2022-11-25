@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import React, {useState} from "react";
 import { Random } from 'meteor/random';
 import { GamesCollection } from "../db/GamesCollection";
+import {useTracker} from "meteor/react-meteor-data";
 
 export const GameForm = ({setGameId} ) => {
     const [player1Name, setPlayer1Name] = useState('');
@@ -20,10 +21,19 @@ export const GameForm = ({setGameId} ) => {
 
     };
 
+    const { game, isLoading } = useTracker (() =>{
+        const handler = Meteor.subscribe('games', gameSecret);
+        if (!handler.ready()) {
+            return { game: '', isLoading: true };
+        }
+        const game = gameSecret ? GamesCollection.findOne({gameId: gameSecret}) : '';
+        return game ? { game } : { game: '' };
+    });
+
     const handleJoinGame = e => {
         e.preventDefault();
 
-        const game = GamesCollection.findOne({gameId: gameSecret});
+
         if (!game){
             setLinkError('Invalid id, check with invitor');
             return;
